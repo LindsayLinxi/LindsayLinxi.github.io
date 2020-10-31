@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="1.安装Debugger for Chrome插件  More info: Debugger for Chrome 2.配置launch.json文件  launch.json配置   注意 ：”request”: “launch”每次都会以一个新用户的身份打开Chrome，无法使用已安装的Chrome拓展插件, 用”request”: “attach”启动Chrome的远程调试，才能使用扩展程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VS Code配置Chrome调试">
+<meta property="og:url" content="http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/index.html">
+<meta property="og:site_name" content="Lindsay">
+<meta property="og:description" content="1.安装Debugger for Chrome插件  More info: Debugger for Chrome 2.配置launch.json文件  launch.json配置   注意 ：”request”: “launch”每次都会以一个新用户的身份打开Chrome，无法使用已安装的Chrome拓展插件, 用”request”: “attach”启动Chrome的远程调试，才能使用扩展程序">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/img_1.png">
+<meta property="og:image" content="http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/img_2.png">
+<meta property="og:image" content="http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/img_3.png">
+<meta property="og:image" content="http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/img_4.png">
+<meta property="article:published_time" content="2020-10-31T09:18:23.000Z">
+<meta property="article:modified_time" content="2020-10-31T10:17:04.761Z">
+<meta property="article:author" content="Lindsay">
+<meta property="article:tag" content="工具">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/img_1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>VS Code配置Chrome调试</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2020/10/30/hello-world/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&text=VS Code配置Chrome调试"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&is_video=false&description=VS Code配置Chrome调试"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=VS Code配置Chrome调试&body=Check out this article: http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&name=VS Code配置Chrome调试&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&t=VS Code配置Chrome调试"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85Debugger-for-Chrome%E6%8F%92%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">1.安装Debugger for Chrome插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%85%8D%E7%BD%AElaunch-json%E6%96%87%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">2.配置launch.json文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%90%AF%E5%8A%A8Chrome%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">3.启动Chrome远程调试</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        VS Code配置Chrome调试
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Lindsay</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2020-10-31T09:18:23.000Z" itemprop="datePublished">2020-10-31</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="1-安装Debugger-for-Chrome插件"><a href="#1-安装Debugger-for-Chrome插件" class="headerlink" title="1.安装Debugger for Chrome插件"></a>1.安装Debugger for Chrome插件</h2><img src="/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/img_1.png" class="" title="This is an example image">
+
+<p>More info: <a target="_blank" rel="noopener" href="https://marketplace.visualstudio.com/items?itemName=msjsdiag.debugger-for-chrome">Debugger for Chrome</a></p>
+<h2 id="2-配置launch-json文件"><a href="#2-配置launch-json文件" class="headerlink" title="2.配置launch.json文件"></a>2.配置launch.json文件</h2><img src="/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/img_2.png" class="" title="This is an example image">
+
+<p><em>launch.json配置</em></p>
+<img src="/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/img_3.png" class="" title="This is an example image">
+
+<p><strong><em>注意</em></strong> <em>：”request”: “launch”每次都会以一个新用户的身份打开Chrome，无法使用已安装的Chrome拓展插件, 用”request”: “attach”启动Chrome的远程调试，才能使用扩展程序</em></p>
+<h2 id="3-启动Chrome远程调试"><a href="#3-启动Chrome远程调试" class="headerlink" title="3.启动Chrome远程调试"></a>3.启动Chrome远程调试</h2><p><strong><em>Windows</em></strong><br><em>1.右键单击Chrome快捷方式，然后选择属性</em><br><em>2.在“目标”字段中，附加 –remote-debugging-port=9222</em><br><em>3.或者在命令提示符下执行 /chrome.exe –remote-debugging-port=9222</em></p>
+<p><strong><em>Mac</em></strong><br><em>在终端中执行 /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome –remote-debugging-port=9222</em></p>
+<p><strong><em>Linux</em></strong><br><em>在终端中启动 google-chrome –remote-debugging-port=9222</em></p>
+<p>用”request”: “attach”配置launch.json文件</p>
+<img src="/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/img_4.png" class="" title="This is an example image">
+
+<p>More info: <a target="_blank" rel="noopener" href="https://github.com/Microsoft/vscode-chrome-debug/">vscode-chrome-debug</a></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%AE%89%E8%A3%85Debugger-for-Chrome%E6%8F%92%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">1.安装Debugger for Chrome插件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E9%85%8D%E7%BD%AElaunch-json%E6%96%87%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">2.配置launch.json文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%90%AF%E5%8A%A8Chrome%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95"><span class="toc-number">3.</span> <span class="toc-text">3.启动Chrome远程调试</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&text=VS Code配置Chrome调试"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&is_video=false&description=VS Code配置Chrome调试"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=VS Code配置Chrome调试&body=Check out this article: http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&title=VS Code配置Chrome调试"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&name=VS Code配置Chrome调试&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://example.com/2020/10/31/VS-Code%E9%85%8D%E7%BD%AEChrome%E8%B0%83%E8%AF%95/&t=VS Code配置Chrome调试"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2020
+    Lindsay
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="/projects_url">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"复制到粘贴板!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "复制成功!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
