@@ -2,6 +2,7 @@
 title: VS Code配置Chrome调试
 date: 2020-10-31 17:18:23
 tags: '工具'
+image: /images/theme/article_image_1.jpg
 ---
 ## 1.安装Debugger for Chrome插件
 
