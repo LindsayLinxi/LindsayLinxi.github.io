@@ -25,7 +25,7 @@ preview:
   welcome_image: /images/theme/welcome-image.jpg
   motto:
     default: 敢于直面惨淡的Warning，敢于正视淋漓的Error
-    color: '#000'
+    color: '#363636'
     api:  # http://localhost:3000/api/motto
 
 # Menu
