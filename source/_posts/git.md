@@ -2,7 +2,7 @@
 title: git的使用
 date: 2021-11-17 21:32:31
 tags: '工具'
-image: /images/theme/git.jpeg
+image: /images/theme/git_logo.jpg
 ---
 ### 查看配置
 >git config -l
